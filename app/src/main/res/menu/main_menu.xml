@@ -13,7 +13,7 @@
     <item
         android:id="@+id/compatible"
         android:icon="@drawable/compatible"
-        android:title="Compatible with me"/>
+        android:title="Compatible with Us"/>
 
     <item android:title="Blood Groups">
         <menu>
