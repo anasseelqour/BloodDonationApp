@@ -88,8 +88,13 @@ public class MainActivity extends AppCompatActivity
                     String type = snapshot.child("type").getValue().toString();
                     nav_type.setText(type);
 
-                    String imageUrl = snapshot.child("profilepictureurl").getValue().toString();
-                    Glide.with(getApplicationContext()).load(imageUrl).into(nav_profile_image);
+                    if (snapshot.hasChild("profilepictureurl")){
+                        String imageUrl = snapshot.child("profilepictureurl").getValue().toString();
+                        Glide.with(getApplicationContext()).load(imageUrl).into(nav_profile_image);
+                    }else {
+                        nav_profile_image.setImageResource(R.drawable.profile_image);
+                    }
+
                 }
             }
 
@@ -101,6 +106,17 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+/*
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.profile:
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    } */
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -108,6 +124,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.profile:
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intent);
+                break;
+
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent2 = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent2);
+                break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
