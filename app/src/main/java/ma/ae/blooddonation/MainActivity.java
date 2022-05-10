@@ -27,14 +27,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
+import ma.ae.blooddonation.Adapter.UserAdapter;
+import ma.ae.blooddonation.Model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ma.ae.blooddonation.Adapter.UserAdapter;
-import ma.ae.blooddonation.Model.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -257,6 +256,12 @@ public class MainActivity extends AppCompatActivity
                 Intent intent10 = new Intent(MainActivity.this, CategorySelectedActivity.class);
                 intent10.putExtra("group", "O-");
                 startActivity(intent10);
+                break;
+
+            case R.id.compatible:
+                Intent intent11 = new Intent(MainActivity.this, CategorySelectedActivity.class);
+                intent11.putExtra("group", "Compatible with me");
+                startActivity(intent11);
                 break;
 
 

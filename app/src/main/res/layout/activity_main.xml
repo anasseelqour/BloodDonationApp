@@ -22,7 +22,7 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#Be5025"/>
+            android:background="#8B0000"/>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"

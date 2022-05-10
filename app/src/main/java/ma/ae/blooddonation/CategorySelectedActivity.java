@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -15,12 +16,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import ma.ae.blooddonation.Adapter.UserAdapter;
+import ma.ae.blooddonation.Model.User;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import ma.ae.blooddonation.Adapter.UserAdapter;
-import ma.ae.blooddonation.Model.User;
 
 public class CategorySelectedActivity extends AppCompatActivity {
 
@@ -54,13 +54,22 @@ public class CategorySelectedActivity extends AppCompatActivity {
 
         if (getIntent().getExtras() !=null){
             title = getIntent().getStringExtra("group");
-            getSupportActionBar().setTitle("Blood group "+ title); // voir main.menu
 
-            readUsers();
+            getSupportActionBar().setTitle("Blood group "+ title);
+
+            if (title.equals("Compatible with me")){
+                getCompatibleUsers();
+                getSupportActionBar().setTitle("Compatible with me");
+            }
+            else {
+                readUsers();
+            }
+
         }
     }
 
-    private void readUsers() {
+    private void getCompatibleUsers() {
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         ref.addValueEventListener(new ValueEventListener() {
@@ -74,9 +83,11 @@ public class CategorySelectedActivity extends AppCompatActivity {
                     result = "donor";
                 }
 
+                String blooodgroup = snapshot.child("bloodgroup").getValue().toString();
+
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                         .child("users");
-                Query query = reference.orderByChild("search").equalTo(result+title); // voir database realtime
+                Query query = reference.orderByChild("search").equalTo(result+blooodgroup);
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -100,6 +111,61 @@ public class CategorySelectedActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void readUsers() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String result;
+                String type = snapshot.child("type").getValue().toString();
+                if (type.equals("donor")){
+                    result = "recipient";
+                }else {
+                    result = "donor";
+                }
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                        .child("users");
+                Query query = reference.orderByChild("search").equalTo(result+title);
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        userList.clear();
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                            User user = dataSnapshot.getValue(User.class);
+                            userList.add(user);
+                        }
+                        userAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+// voir ProfileActivity.java celuici pour activer la flèche qui signifié précédent
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return  true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
 }
