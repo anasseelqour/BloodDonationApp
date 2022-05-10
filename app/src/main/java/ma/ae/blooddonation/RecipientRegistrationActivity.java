@@ -111,7 +111,7 @@ public class RecipientRegistrationActivity extends AppCompatActivity {
                     return;
                 }
                 if (TextUtils.isEmpty(fullName)){
-                    registerFullName.setError("Full name is required!");
+                    registerFullName.setError("Full name is required is required!");
                     return;
                 }
                 if (TextUtils.isEmpty(idNumber)){

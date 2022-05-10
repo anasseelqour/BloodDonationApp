@@ -22,6 +22,7 @@
         <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/drawable/ic_share.xml" value="0.1" />
         <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/drawable/navigation_selector.xml" value="0.1" />
         <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/drawable/navigation_view_item_selected.xml" value="0.1" />
+        <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/layout/activity_category_selected.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/layout/activity_donor_registration.xml" value="1.2" />
         <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/layout/activity_main.xml" value="0.1" />
@@ -31,7 +32,7 @@
         <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/layout/activity_splash_screen.xml" value="0.1" />
         <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/layout/header.xml" value="0.1" />
         <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/layout/user_displayed_layout.xml" value="0.12335359675785208" />
-        <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/menu/main_menu.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/21263/AndroidStudioProjects/BloodDonation/app/src/main/res/menu/main_menu.xml" value="0.1" />
       </map>
     </option>
   </component>
