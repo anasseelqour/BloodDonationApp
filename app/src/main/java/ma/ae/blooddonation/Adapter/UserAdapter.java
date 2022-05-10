@@ -39,13 +39,18 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final  User user = userList.get(position);
+         final  User user = userList.get(position);
 
-        holder.type.setText(user.getType());
-        holder.userEmail.setText(user.getEmail());
-        holder.phoneNumber.setText(user.getPhonenumber());
-        holder.userName.setText(user.getName());
-        holder.bloodGroup.setText(user.getBloodgroup());
+         holder.type.setText(user.getType());
+
+         if (user.getType().equals("donor")){
+            holder.emailNow.setVisibility(View.VISIBLE);
+         }
+
+         holder.userEmail.setText(user.getEmail());
+         holder.phoneNumber.setText(user.getPhonenumber());
+         holder.userName.setText(user.getName());
+         holder.bloodGroup.setText(user.getBloodgroup());
 
         Glide.with(context).load(user.getProfilepictureurl()).into(holder.userProfileImage);
 
@@ -77,4 +82,3 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
         }
     }
 }
-

@@ -1,8 +1,10 @@
 package ma.ae.blooddonation.Model;
 
 public class User {
+    String name, bloodgroup, id, email, idnumber, phonenumber,profilepictureurl,search,type;
 
-    String name, bloodgroup, id, email, idnumber, phonenumber, profilepictureurl, search, type;
+    public User() {
+    }
 
     public User(String name, String bloodgroup, String id, String email, String idnumber, String phonenumber, String profilepictureurl, String search, String type) {
         this.name = name;

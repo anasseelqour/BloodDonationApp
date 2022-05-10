@@ -1,19 +1,22 @@
 package ma.ae.blooddonation;
 
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
@@ -22,9 +25,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import ma.ae.blooddonation.Adapter.UserAdapter;
+import ma.ae.blooddonation.Model.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -37,6 +47,13 @@ public class MainActivity extends AppCompatActivity
     private TextView nav_fullname, nav_email, nav_bloodgroup, nav_type;
 
     private DatabaseReference userRef;
+
+    private RecyclerView recyclerView;
+    private ProgressBar progressbar;
+
+    private List<User> userList;
+    private UserAdapter userAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +74,46 @@ public class MainActivity extends AppCompatActivity
 
         nav_view.setNavigationItemSelectedListener(this);
 
-        // ceci etant pour initialiser les élément du header.xml afin de les remplacer par les valers stoackées dans la base de données
+        progressbar = findViewById(R.id.progressbar);
+
+        recyclerView = findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
+
+        userList = new ArrayList<>();
+        userAdapter = new UserAdapter(MainActivity.this, userList);
+
+        recyclerView.setAdapter(userAdapter);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String type = snapshot.child("type").getValue().toString();
+                if (type.equals("donor")){
+                    readRecipients();
+                }else {
+                    readDonors();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
 
         nav_profile_image = nav_view.getHeaderView(0).findViewById(R.id.nav_user_image);
         nav_fullname = nav_view.getHeaderView(0).findViewById(R.id.nav_user_fullname);
         nav_email = nav_view.getHeaderView(0).findViewById(R.id.nav_user_email);
         nav_bloodgroup = nav_view.getHeaderView(0).findViewById(R.id.nav_user_bloodgroup);
         nav_type = nav_view.getHeaderView(0).findViewById(R.id.nav_user_type);
-
-        // ceci etant pour chercher la data dans la base de données
 
         userRef = FirebaseDatabase.getInstance().getReference().child("users").child(
                 FirebaseAuth.getInstance().getCurrentUser().getUid()
@@ -88,6 +136,7 @@ public class MainActivity extends AppCompatActivity
                     String type = snapshot.child("type").getValue().toString();
                     nav_type.setText(type);
 
+
                     if (snapshot.hasChild("profilepictureurl")){
                         String imageUrl = snapshot.child("profilepictureurl").getValue().toString();
                         Glide.with(getApplicationContext()).load(imageUrl).into(nav_profile_image);
@@ -106,17 +155,62 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-/*
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.profile:
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
-        }
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    } */
+
+    private void readDonors() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("users");
+        Query query = reference.orderByChild("type").equalTo("donor");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    User user = dataSnapshot.getValue(User.class);
+                    userList.add(user);
+                }
+                userAdapter.notifyDataSetChanged();
+                progressbar.setVisibility(View.GONE);
+
+                if (userList.isEmpty()){
+                    Toast.makeText(MainActivity.this, "No recipients", Toast.LENGTH_SHORT).show();
+                    progressbar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void readRecipients() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("users");
+        Query query = reference.orderByChild("type").equalTo("recipient");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    User user = dataSnapshot.getValue(User.class);
+                    userList.add(user);
+                }
+                userAdapter.notifyDataSetChanged();
+                progressbar.setVisibility(View.GONE);
+
+                if (userList.isEmpty()){
+                    Toast.makeText(MainActivity.this, "No recipients", Toast.LENGTH_SHORT).show();
+                    progressbar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
