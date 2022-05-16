@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -27,13 +28,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import ma.ae.blooddonation.Adapter.UserAdapter;
-import ma.ae.blooddonation.Model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ma.ae.blooddonation.Adapter.UserAdapter;
+import ma.ae.blooddonation.Model.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -141,6 +142,12 @@ public class MainActivity extends AppCompatActivity
                         Glide.with(getApplicationContext()).load(imageUrl).into(nav_profile_image);
                     }else {
                         nav_profile_image.setImageResource(R.drawable.profile_image);
+                    }
+
+                    Menu nav_menu = nav_view.getMenu();
+
+                    if (type.equals("donor")){
+                        nav_menu.findItem(R.id.sentEmail).setTitle("Received Emails");
                     }
 
                 }
@@ -262,6 +269,11 @@ public class MainActivity extends AppCompatActivity
                 Intent intent11 = new Intent(MainActivity.this, CategorySelectedActivity.class);
                 intent11.putExtra("group", "Compatible with me");
                 startActivity(intent11);
+                break;
+
+            case R.id.sentEmail:
+                Intent intent12 = new Intent(MainActivity.this, SentEmailActivity.class);
+                startActivity(intent12);
                 break;
 
 
