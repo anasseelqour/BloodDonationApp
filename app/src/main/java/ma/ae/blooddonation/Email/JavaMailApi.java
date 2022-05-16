@@ -1,7 +1,5 @@
 package ma.ae.blooddonation.Email;
 
-
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-import ma.ae.blooddonation.R;
 
 import java.util.Properties;
 
@@ -21,6 +18,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+import ma.ae.blooddonation.R;
 
 public class JavaMailApi  extends AsyncTask<Void, Void, Void> {
 
@@ -38,12 +37,12 @@ public class JavaMailApi  extends AsyncTask<Void, Void, Void> {
     ProgressDialog progressDialog;
 
     @Override
-    protected void onPostExecute(Void aVoid) {
+    protected void onPreExecute() {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please wait as the email is being sent...");
         progressDialog.setTitle("Sending Email to donor");
         progressDialog.show();
-        super.onPostExecute(aVoid);
+        super.onPreExecute();
     }
 
     @Override
@@ -78,10 +77,10 @@ public class JavaMailApi  extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected void onPreExecute() {
+    protected void onPostExecute(Void aVoid) {
         progressDialog.dismiss();
         startAlertDialog();
-        super.onPreExecute();
+        super.onPostExecute(aVoid);
     }
 
     private void startAlertDialog() {
