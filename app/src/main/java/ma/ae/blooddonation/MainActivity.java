@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity
 
                     if (type.equals("donor")){
                         nav_menu.findItem(R.id.sentEmail).setTitle("Received Emails");
+                        nav_menu.findItem(R.id.notifications).setVisible(true);
                     }
 
                 }
@@ -269,6 +270,11 @@ public class MainActivity extends AppCompatActivity
                 Intent intent11 = new Intent(MainActivity.this, CategorySelectedActivity.class);
                 intent11.putExtra("group", "Compatible with me");
                 startActivity(intent11);
+                break;
+
+            case R.id.notifications:
+                Intent intent13 = new Intent(MainActivity.this, NotificationsActivity.class);
+                startActivity(intent13);
                 break;
 
             case R.id.sentEmail:
